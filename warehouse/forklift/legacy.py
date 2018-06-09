@@ -796,24 +796,6 @@ def file_upload(request):
                 ).format(projecthelp=request.help_url(_anchor="admin-intervention")),
             ) from None
 
-        # Ensure that user has at least one verified email address. This should
-        # reduce the ease of spam account creation and activity.
-        # TODO: Once legacy is shutdown consider the condition here, perhaps
-        # move to user.is_active or some other boolean
-        if not any(email.verified for email in request.user.emails):
-            raise _exc_with_message(
-                HTTPBadRequest,
-                (
-                    "User {!r} has no verified email addresses, "
-                    "verify at least one address before registering "
-                    "a new project on PyPI. See {projecthelp} "
-                    "for more information."
-                ).format(
-                    request.user.username,
-                    projecthelp=request.help_url(_anchor="verified-email"),
-                ),
-            ) from None
-
         # Before we create the project, we're going to check our blacklist to
         # see if this project is even allowed to be registered. If it is not,
         # then we're going to deny the request to create this project.
