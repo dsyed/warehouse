@@ -42,7 +42,7 @@
     <meta name="defaultLanguage" content="en">
     <meta name="availableLanguages" content="en">
 
-    {% if request.registry.settings.get("warehouse.domain") == "test.pypi.org" %}
+    {% if request.host.startswith("pypi-test") %}
       {% set testPyPI = true %}
     {% endif %}
 
