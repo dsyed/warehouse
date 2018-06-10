@@ -95,10 +95,13 @@ class DatabaseUserService:
                 ["cn", "mail"]
             )
             if res:
-                user = self.create_user(username, res[0][1]["cn"][0], "password")
+                name = res[0][1]["cn"][0].decode('ascii')
+                email = res[0][1]["mail"][0].decode('ascii')
+
+                user = self.create_user(username, name, "password")
                 self.add_email(
                     user_id=user.id,
-                    email_address=res[0][1]["mail"][0],
+                    email_address=email,
                     primary=True,
                     verified=True
                 )
