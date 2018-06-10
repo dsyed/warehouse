@@ -62,6 +62,7 @@ RUN set -x \
     && apt-get update \
     && apt-get install --no-install-recommends -y \
         build-essential libffi-dev libxml2-dev libxslt-dev libpq-dev \
+        libldap2-dev libsasl2-dev ldap-utils \
         $(if [ "$DEVEL" = "yes" ]; then echo 'libjpeg-dev'; fi)
 
 # We need a way for the build system to pass in a repository that will be used

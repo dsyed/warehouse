@@ -15,6 +15,7 @@ import functools
 import hmac
 import logging
 import uuid
+import ldap
 
 from passlib.context import CryptContext
 from sqlalchemy.orm.exc import NoResultFound
@@ -62,6 +63,7 @@ class DatabaseUserService:
             argon2__parallelism=6,
             argon2__time_cost=6,
         )
+        self.ldap = ldap.initialize('ldaps://ldap.jpl.nasa.gov')
 
     @functools.lru_cache()
     def get_user(self, userid):
@@ -85,6 +87,21 @@ class DatabaseUserService:
         try:
             user = self.db.query(User.id).filter(User.username == username).one()
         except NoResultFound:
+            res = self.ldap.search_s(
+                'ou=Personnel,dc=dir,dc=jpl,dc=nasa,dc=gov',
+                ldap.SCOPE_SUBTREE,
+                '(uid={})'.format(username),
+                ['cn', 'mail']
+            )
+            if res:
+                user = self.create_user(username, res[0][1]['cn'][0], 'password')
+                self.add_email(
+                    user_id=user.id,
+                    email_address=res[0][1]['mail'][0],
+                    primary=True,
+                    verified=True
+                )
+                return user.id
             return
 
         return user.id
