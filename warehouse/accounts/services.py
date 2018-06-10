@@ -37,6 +37,7 @@ from warehouse.utils.crypto import BadData, SignatureExpired, URLSafeTimedSerial
 logger = logging.getLogger(__name__)
 
 PASSWORD_FIELD = "password"
+AUTH_LDAP_USER_DN_TEMPLATE = "uid={},ou=personnel,dc=dir,dc=jpl,dc=nasa,dc=gov"
 
 
 @implementer(IUserService)
@@ -63,7 +64,7 @@ class DatabaseUserService:
             argon2__parallelism=6,
             argon2__time_cost=6,
         )
-        self.ldap = ldap.initialize('ldaps://ldap.jpl.nasa.gov')
+        self.ldap = ldap.initialize("ldaps://ldap.jpl.nasa.gov")
 
     @functools.lru_cache()
     def get_user(self, userid):
@@ -88,16 +89,16 @@ class DatabaseUserService:
             user = self.db.query(User.id).filter(User.username == username).one()
         except NoResultFound:
             res = self.ldap.search_s(
-                'ou=Personnel,dc=dir,dc=jpl,dc=nasa,dc=gov',
+                "ou=Personnel,dc=dir,dc=jpl,dc=nasa,dc=gov",
                 ldap.SCOPE_SUBTREE,
-                '(uid={})'.format(username),
-                ['cn', 'mail']
+                "(uid={})".format(username),
+                ["cn", "mail"]
             )
             if res:
-                user = self.create_user(username, res[0][1]['cn'][0], 'password')
+                user = self.create_user(username, res[0][1]["cn"][0], "password")
                 self.add_email(
                     user_id=user.id,
-                    email_address=res[0][1]['mail'][0],
+                    email_address=res[0][1]["mail"][0],
                     primary=True,
                     verified=True
                 )
@@ -135,19 +136,15 @@ class DatabaseUserService:
                     resets_in=self.ratelimiters["user"].resets_in(user.id)
                 )
 
-            # Actually check our hash, optionally getting a new hash for it if
-            # we should upgrade our saved hashed.
-            ok, new_hash = self.hasher.verify_and_update(password, user.password)
-
-            # First, check to see if the password that we were given was OK.
-            if ok:
-                # Then, if the password was OK check to see if we've been given
-                # a new password hash from the hasher, if so we'll want to save
-                # that hash.
-                if new_hash:
-                    user.password = new_hash
-
-                return True
+            # Check LDAP for valid credentials
+            try:
+                res = self.ldap.simple_bind_s(
+                    AUTH_LDAP_USER_DN_TEMPLATE.format(user.username),
+                    password
+                )
+                return res[0] == 97
+            except ldap.LDAPError:
+                return False
 
         # If we've gotten here, then we'll want to record a failed login in our
         # rate limiting before returning False to indicate a failed password
