@@ -37,7 +37,8 @@ from warehouse.utils.crypto import BadData, SignatureExpired, URLSafeTimedSerial
 logger = logging.getLogger(__name__)
 
 PASSWORD_FIELD = "password"
-AUTH_LDAP_USER_DN_TEMPLATE = "uid={},ou=personnel,dc=dir,dc=jpl,dc=nasa,dc=gov"
+LDAP_URL = "ldaps://ldap.jpl.nasa.gov"
+LDAP_BASE_DN = "ou=personnel,dc=dir,dc=jpl,dc=nasa,dc=gov"
 
 
 @implementer(IUserService)
@@ -64,7 +65,7 @@ class DatabaseUserService:
             argon2__parallelism=6,
             argon2__time_cost=6,
         )
-        self.ldap = ldap.initialize("ldaps://ldap.jpl.nasa.gov")
+        self.ldap = ldap.initialize(LDAP_URL)
 
     @functools.lru_cache()
     def get_user(self, userid):
@@ -89,7 +90,7 @@ class DatabaseUserService:
             user = self.db.query(User.id).filter(User.username == username).one()
         except NoResultFound:
             res = self.ldap.search_s(
-                "ou=Personnel,dc=dir,dc=jpl,dc=nasa,dc=gov",
+                LDAP_BASE_DN,
                 ldap.SCOPE_SUBTREE,
                 "(uid={})".format(username),
                 ["cn", "mail"]
@@ -142,7 +143,7 @@ class DatabaseUserService:
             # Check LDAP for valid credentials
             try:
                 res = self.ldap.simple_bind_s(
-                    AUTH_LDAP_USER_DN_TEMPLATE.format(user.username),
+                    "uid={},{}".format(user.username, LDAP_BASE_DN),
                     password
                 )
                 return res[0] == 97
