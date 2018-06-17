@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: warehouse-rabbitmq
+  namespace: ${NAMESPACE:-pypi-test}
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: warehouse-rabbitmq
+    spec:
+      containers:
+        - name: warehouse-rabbitmq
+          image: rabbitmq:latest
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1024Mi
+            limits:
+              cpu: 250m
+              memory: 1024Mi

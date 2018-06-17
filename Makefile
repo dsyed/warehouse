@@ -167,4 +167,23 @@ purge: stop clean
 stop:
 	docker-compose down -v
 
+# Deployment commands
+export NAME = warehouse
+export IMAGE_PREFIX = registry.jpl.nasa.gov/jteam
+export VERSION ?= dev
+export NAMESPACE ?= pypi-test
+
+build-src:
+	docker build -f Dockerfile $(shell for i in ${VERSION}; do echo -t ${IMAGE_PREFIX}/${NAME}-src:$${i}; done) --build-arg DEVEL="yes" --build-arg IPYTHON="no" .
+
+build-static:
+	docker build -f Dockerfile.static $(shell for i in ${VERSION}; do echo -t ${IMAGE_PREFIX}/${NAME}-static:$${i}; done) .
+
+push:
+	docker push $(IMAGE_PREFIX)/$(NAME)-src:$(VERSION)
+	docker push $(IMAGE_PREFIX)/$(NAME)-static:$(VERSION)
+
+deploy:
+	find manifests -name *.yaml | xargs -I {} sh -c "eval_file {} | kubectl apply -f -"
+
 .PHONY: default build serve initdb shell tests docs deps travis-deps clean purge debug stop

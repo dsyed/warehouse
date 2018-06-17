@@ -21,3 +21,8 @@ COPY package.json package-lock.json .babelrc /opt/warehouse/src/
 RUN set -x \
     && npm install -g gulp-cli \
     && npm install
+
+COPY warehouse /opt/warehouse/src/warehouse
+COPY Gulpfile.babel.js /opt/warehouse/src/Gulpfile.babel.js
+COPY .babelrc /opt/warehouse/src/.babelrc
+COPY .sass-lint.yml /opt/warehouse/src/.sass-lint.yml

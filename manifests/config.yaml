@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: ${NAMESPACE}
+data:
+  WAREHOUSE_ENV: development
+  WAREHOUSE_TOKEN: insecuretoken
+  AMQP_URL: amqp://guest@rabbitmq:5672//
+  DATABASE_URL: postgresql://postgres@db/warehouse
+  ELASTICSEARCH_URL: http://elasticsearch:9200/development
+  REDIS_URL: redis://redis:6379/0
+  SESSION_SECRET: "an insecure development secret"
+  CAMO_URL: "{request.scheme}://{request.domain}:9000/"
+  CAMO_KEY: "insecure camo key"
+  DOCS_URL: "https://pythonhosted.org/{project}/"
+  FILES_BACKEND: warehouse.packaging.services.LocalFileStorage path=/var/opt/warehouse/packages/ url=http://files.example.com/packages/{path}
+  DOCS_BACKEND: warehouse.packaging.services.LocalDocsStorage path=/var/opt/warehouse/docs/
+  MAIL_BACKEND: warehouse.email.services.SMTPEmailSender host=smtp port=2525 ssl=false sender=noreply@pypi.org
+  STATUSPAGE_URL: https://2p66nmmycsj3.statuspage.io
+  TOKEN_PASSWORD_SECRET: "an insecure password reset secret key"
+  TOKEN_EMAIL_SECRET: "an insecure email verification secret key"
+  DATADOG_HOST: notdatadog
+  WAREHOUSE_LEGACY_DOMAIN: pypi.python.org

@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: warehouse-notdatadog
+  namespace: ${NAMESPACE:-pypi-test}
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: warehouse-notdatadog
+    spec:
+      containers:
+        - name: warehouse-notdatadog
+          image: ${IMAGE_PREFIX}/${NAME}-src:${VERSION:latest}
+          command: ["python", "/opt/warehouse/src/dev/notdatadog.py", "0.0.0.0:8125"]
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 250m
+              memory: 512Mi

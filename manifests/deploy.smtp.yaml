@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: warehouse-smtp
+  namespace: ${NAMESPACE:-pypi-test}
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: warehouse-smtp
+    spec:
+      containers:
+        - name: warehouse-smtp
+          image: ${IMAGE_PREFIX}/${NAME}-src:${VERSION:latest}
+          command: ["python", "/opt/warehouse/src/dev/smtp.py", "0.0.0.0:2525"]
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 250m
+              memory: 512Mi

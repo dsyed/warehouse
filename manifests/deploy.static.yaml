@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: warehouse-static
+  namespace: ${NAMESPACE:-pypi-test}
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: warehouse-static
+    spec:
+      containers:
+        - name: warehouse-static
+          image: ${IMAGE_PREFIX}/${NAME}-static:${VERSION:latest}
+          command:
+            - bash
+            - "-c"
+            - "node --trace-warnings `which gulp` watch"
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 80
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 80
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 1024Mi
+            limits:
+              cpu: 1000m
+              memory: 1024Mi

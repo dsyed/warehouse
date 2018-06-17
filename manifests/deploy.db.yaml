@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: warehouse-db
+  namespace: ${NAMESPACE:-pypi-test}
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: warehouse-db
+    spec:
+      containers:
+        - name: warehouse-db
+          image: postgres:10.1
+          ports:
+            - name: db
+              containerPort: 5432
+          resources:
+            requests:
+              cpu: 250m
+              memory: 1024Mi
+            limits:
+              cpu: 250m
+              memory: 1024Mi

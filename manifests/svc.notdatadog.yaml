@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notdatadog
+  namespace: ${NAMESPACE}
+spec:
+  selector:
+    name: notdatadog
+  ports:
+    - protocol: UDP
+      port: 8125
+      targetPort: 8125

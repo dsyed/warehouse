@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: warehouse-web
+  namespace: ${NAMESPACE:-pypi-test}
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: warehouse-web
+    spec:
+      containers:
+        - name: warehouse-web
+          image: ${IMAGE_PREFIX}/${NAME}-src:${VERSION:latest}
+          command: ["hupper", "-m", "gunicorn.app.wsgiapp", "-b", "0.0.0.0:8000", "-c", "gunicorn-cabotage.conf", "warehouse.wsgi:application"]
+          envFrom:
+          - configMapRef:
+              name: config
+          # livenessProbe:
+          #   httpGet:
+          #     path: /_health/
+          #     port: 8000
+          # readinessProbe:
+          #   httpGet:
+          #     path: /_health/
+          #     port: 8000
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2048Mi
+            limits:
+              cpu: 500m
+              memory: 2048Mi

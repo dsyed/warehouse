@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: warehouse-elasticsearch
+  namespace: ${NAMESPACE:-pypi-test}
+spec:
+  revisionHistoryLimit: 10
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: warehouse-elasticsearch
+    spec:
+      containers:
+        - name: warehouse-elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 4096Mi
+            limits:
+              cpu: 1000m
+              memory: 4096Mi
