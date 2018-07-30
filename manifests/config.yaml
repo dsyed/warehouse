@@ -4,7 +4,7 @@ metadata:
   name: config
   namespace: ${NAMESPACE}
 data:
-  WAREHOUSE_ENV: development
+  WAREHOUSE_ENV: production
   WAREHOUSE_TOKEN: insecuretoken
   AMQP_URL: amqp://guest@rabbitmq:5672//
   REDIS_URL: redis://redis:6379/0
