@@ -186,4 +186,12 @@ push:
 deploy:
 	find manifests -name *.yaml | xargs -I {} sh -c "eval_file {} | kubectl apply -f -"
 
+start:
+	eval_file manifests/ns.yml | kubectl --context=minikube apply -f -
+	find manifests -name '*.minikube.yml' | xargs -I {} sh -c "eval_file {} | minikube_manifest | kubectl --context=minikube apply -f -"
+	find manifests -name '*.yaml' | xargs -I {} sh -c "eval_file {} | minikube_manifest | kubectl --context=minikube apply -f -"
+
+mk-stop:
+	-kubectl --context=minikube delete all --all --namespace=${NAMESPACE} 2> /dev/null
+
 .PHONY: default build serve initdb shell tests docs deps travis-deps clean purge debug stop

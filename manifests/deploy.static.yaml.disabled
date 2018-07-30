@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: warehouse-static
+  name: static
   namespace: ${NAMESPACE:-pypi-test}
 spec:
   revisionHistoryLimit: 10
@@ -9,10 +9,10 @@ spec:
   template:
     metadata:
       labels:
-        name: warehouse-static
+        name: static
     spec:
       containers:
-        - name: warehouse-static
+        - name: static
           image: ${IMAGE_PREFIX}/${NAME}-static:${VERSION:latest}
           command:
             - bash

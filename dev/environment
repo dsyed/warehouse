@@ -7,9 +7,9 @@ WAREHOUSE_TOKEN=insecuretoken
 
 AMQP_URL=amqp://guest@rabbitmq:5672//
 
-DATABASE_URL=postgresql://postgres@db/warehouse
+DATABASE_URL=postgresql://warehouse:chee$e$hop@warehouse-test.c6oppqgammgy.us-gov-west-1.rds.amazonaws.com:5432/warehouse
 
-ELASTICSEARCH_URL=http://elasticsearch:9200/development
+ELASTICSEARCH_URL=https://warehouse:chee$e$hop@53238ec8a3d8408d9084225ed0a6d97b.elastic.jpl.nasa.gov:9243/development
 
 REDIS_URL=redis://redis:6379/0
 

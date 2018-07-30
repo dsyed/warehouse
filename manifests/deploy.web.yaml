@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: warehouse-web
+  name: web
   namespace: ${NAMESPACE:-pypi-test}
 spec:
   revisionHistoryLimit: 10
@@ -9,15 +9,26 @@ spec:
   template:
     metadata:
       labels:
-        name: warehouse-web
+        name: web
     spec:
       containers:
-        - name: warehouse-web
+        - name: web
           image: ${IMAGE_PREFIX}/${NAME}-src:${VERSION:latest}
           command: ["hupper", "-m", "gunicorn.app.wsgiapp", "-b", "0.0.0.0:8000", "-c", "gunicorn-cabotage.conf", "warehouse.wsgi:application"]
           envFrom:
           - configMapRef:
               name: config
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: url
+            - name: ELASTICSEARCH_URL
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch
+                  key: url
           # livenessProbe:
           #   httpGet:
           #     path: /_health/

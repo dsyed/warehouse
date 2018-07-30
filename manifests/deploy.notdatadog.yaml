@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: warehouse-notdatadog
+  name: notdatadog
   namespace: ${NAMESPACE:-pypi-test}
 spec:
   revisionHistoryLimit: 10
@@ -9,10 +9,10 @@ spec:
   template:
     metadata:
       labels:
-        name: warehouse-notdatadog
+        name: notdatadog
     spec:
       containers:
-        - name: warehouse-notdatadog
+        - name: notdatadog
           image: ${IMAGE_PREFIX}/${NAME}-src:${VERSION:latest}
           command: ["python", "/opt/warehouse/src/dev/notdatadog.py", "0.0.0.0:8125"]
           resources:

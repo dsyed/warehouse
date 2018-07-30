@@ -18,6 +18,16 @@ spec:
           env:
             - name: C_FORCE_ROOT
               value: "1"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db
+                  key: url
+            - name: ELASTICSEARCH_URL
+              valueFrom:
+                secretKeyRef:
+                  name: elasticsearch
+                  key: url
           envFrom:
           - configMapRef:
               name: config
@@ -32,7 +42,7 @@ spec:
           resources:
             requests:
               cpu: 500m
-              memory: 2048Mi
+              memory: 1024Mi
             limits:
               cpu: 500m
-              memory: 2048Mi
+              memory: 1024Mi

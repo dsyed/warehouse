@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: warehouse-camo
+  name: camo
   namespace: ${NAMESPACE:-pypi-test}
 spec:
   revisionHistoryLimit: 10
@@ -9,10 +9,10 @@ spec:
   template:
     metadata:
       labels:
-        name: warehouse-camo
+        name: camo
     spec:
       containers:
-        - name: warehouse-camo
+        - name: camo
           image: pypa/warehouse-camo:latest
           env:
             - name: CAMO_KEY

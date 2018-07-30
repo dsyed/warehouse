@@ -1,11 +1,11 @@
 version: '3'
 
 services:
-  db:
-    image: postgres:10.1
-    ports:
-      # 5432 may already in use by another PostgreSQL on host
-      - "5433:5432"
+  # db:
+  #   image: postgres:10.1
+  #   ports:
+  #     # 5432 may already in use by another PostgreSQL on host
+  #     - "5433:5432"
 
   redis:
     image: redis:latest
@@ -13,8 +13,8 @@ services:
   rabbitmq:
     image: rabbitmq:latest
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
 
   camo:
     image: pypa/warehouse-camo:latest
@@ -53,10 +53,10 @@ services:
     ports:
       - "80:8000"
     links:
-      - db
+      # - db
       - redis
       - rabbitmq
-      - elasticsearch
+      # - elasticsearch
       - notdatadog
 
   worker:
@@ -71,10 +71,10 @@ services:
     environment:
       C_FORCE_ROOT: "1"
     links:
-      - db
+      # - db
       - redis
       - rabbitmq
-      - elasticsearch
+      # - elasticsearch
       - smtp
       - notdatadog
 
