@@ -160,7 +160,7 @@ def includeme(config):
     config.registry["celery.app"].conf.update(
         accept_content=["json", "msgpack"],
         broker_url=s["celery.broker_url"],
-        broker_use_ssl=s["warehouse.env"] == Environment.production,
+        broker_use_ssl=False,
         task_queue_ha_policy="all",
         task_serializer="json",
         worker_disable_rate_limits=True,
