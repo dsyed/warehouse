@@ -1,0 +1,56 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: s3proxy
+  namespace: ${NAMESPACE}
+  labels:
+    name: s3proxy
+spec:
+  revisionHistoryLimit: 10
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: s3proxy
+    spec:
+      containers:
+        - name: s3proxy
+          image: registry.jpl.nasa.gov/jsearch/s3proxy:latest
+          env:
+            # Leading and trailing slashes required for HTTP_ROOT and AWS_S3_ROOT
+            - name: HTTP_ROOT
+              value: /
+            - name: AWS_S3_ROOT
+              value: /
+            - name: AWS_S3_BUCKET
+              value: pypi-test
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-default-region
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-secret-access-key
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi

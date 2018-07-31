@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: s3proxy
+  namespace: ${NAMESPACE}
+spec:
+  selector:
+    name: s3proxy
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+    - name: ing
+      port: 443
+      targetPort: 80

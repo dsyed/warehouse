@@ -11,3 +11,7 @@ spec:
             backend:
               serviceName: web
               servicePort: 443
+          - path: /files
+            backend:
+              serviceName: s3proxy
+              servicePort: 443
