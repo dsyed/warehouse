@@ -29,6 +29,21 @@ spec:
                 secretKeyRef:
                   name: elasticsearch
                   key: url
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-secret-access-key
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-default-region
           # livenessProbe:
           #   httpGet:
           #     path: /_health/
