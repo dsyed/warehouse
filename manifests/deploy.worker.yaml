@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: warehouse-worker
+  name: worker
   namespace: ${NAMESPACE:-pypi-test}
 spec:
   revisionHistoryLimit: 10
@@ -9,12 +9,15 @@ spec:
   template:
     metadata:
       labels:
-        name: warehouse-worker
+        name: worker
     spec:
       containers:
-        - name: warehouse-worker
+        - name: worker
           image: ${IMAGE_PREFIX}/${NAME}-src:${VERSION:latest}
           command: ["hupper", "-m", "celery", "-A", "warehouse", "worker", "-B", "-S", "redbeat.RedBeatScheduler", "-l", "info"]
+          envFrom:
+          - configMapRef:
+              name: config
           env:
             - name: C_FORCE_ROOT
               value: "1"
@@ -28,9 +31,21 @@ spec:
                 secretKeyRef:
                   name: elasticsearch
                   key: url
-          envFrom:
-          - configMapRef:
-              name: config
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-access-key-id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-secret-access-key
+            - name: AWS_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: aws
+                  key: aws-default-region
           # livenessProbe:
           #   httpGet:
           #     path: /_health/
