@@ -173,6 +173,12 @@ export IMAGE_PREFIX = registry.jpl.nasa.gov/jteam
 export VERSION ?= dev
 export NAMESPACE ?= pypi-test
 
+ifeq ($(NAMESPACE), pypi)
+    export S3_BUCKET = $(NAMESPACE)-prod
+else
+	export S3_BUCKET = $(NAMESPACE)
+endif
+
 build-src:
 	docker build -f Dockerfile $(shell for i in ${VERSION}; do echo -t ${IMAGE_PREFIX}/${NAME}-src:$${i}; done) --build-arg DEVEL="yes" --build-arg IPYTHON="no" .
 
