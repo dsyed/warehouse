@@ -7,5 +7,5 @@ spec:
   selector:
     name: camo
   ports:
-    - port: 9000
+    - port: 443
       targetPort: 9000
