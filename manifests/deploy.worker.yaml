@@ -14,7 +14,7 @@ spec:
       containers:
         - name: worker
           image: ${IMAGE_PREFIX}/${NAME}-src:${VERSION:latest}
-          command: ["hupper", "-m", "celery", "-A", "warehouse", "worker", "-B", "-S", "redbeat.RedBeatScheduler", "-l", "info"]
+          command: ["hupper", "-m", "celery", "-A", "warehouse", "worker", "-B", "-S", "redbeat.RedBeatScheduler", "-l", "info", "-c", "1"]
           envFrom:
           - configMapRef:
               name: config
