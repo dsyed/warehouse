@@ -49,14 +49,14 @@ spec:
                 secretKeyRef:
                   name: aws
                   key: aws-default-region
-          # livenessProbe:
-          #   httpGet:
-          #     path: /_health/
-          #     port: 8000
-          # readinessProbe:
-          #   httpGet:
-          #     path: /_health/
-          #     port: 8000
+          livenessProbe:
+            httpGet:
+              path: /_health/
+              port: 8000
+          readinessProbe:
+            httpGet:
+              path: /_health/
+              port: 8000
           resources:
             requests:
               cpu: 250m

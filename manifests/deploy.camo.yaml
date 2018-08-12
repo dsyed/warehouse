@@ -17,6 +17,14 @@ spec:
           env:
             - name: CAMO_KEY
               value: "insecure camo key"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9000
           resources:
             requests:
               cpu: 250m
