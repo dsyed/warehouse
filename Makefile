@@ -171,7 +171,7 @@ stop:
 export NAME = warehouse
 export IMAGE_PREFIX = registry.jpl.nasa.gov/jteam
 export VERSION ?= dev
-export NAMESPACE ?= pypi-test
+export NAMESPACE ?= pypi-dev
 
 ifeq ($(NAMESPACE), pypi)
     export S3_BUCKET = $(NAMESPACE)-prod
@@ -190,7 +190,7 @@ push:
 	docker push $(IMAGE_PREFIX)/$(NAME)-static:$(VERSION)
 
 deploy:
-	find manifests -name *.yaml | xargs -I {} sh -c "eval_file {} | kubectl apply -f -"
+	find manifests -name '*.yaml' | xargs -I {} sh -c "eval_file {} | kubectl apply -f -"
 
 start:
 	eval_file manifests/ns.yml | kubectl --context=minikube apply -f -
