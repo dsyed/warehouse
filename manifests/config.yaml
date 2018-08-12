@@ -7,7 +7,6 @@ data:
   WAREHOUSE_ENV: production
   WAREHOUSE_TOKEN: insecuretoken
   AMQP_URL: amqp://guest@rabbitmq:5672//
-  REDIS_URL: redis://redis:6379/0
   SESSION_SECRET: "an insecure development secret"
   CAMO_URL: "{request.scheme}://{request.domain}/camo/"
   CAMO_KEY: "insecure camo key"

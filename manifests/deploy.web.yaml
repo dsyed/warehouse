@@ -29,6 +29,11 @@ spec:
                 secretKeyRef:
                   name: elasticsearch
                   key: url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis
+                  key: url
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
