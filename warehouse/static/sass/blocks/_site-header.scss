@@ -31,11 +31,11 @@
 
   &__logo {
     padding: ($spacing-unit / 2) 0;
-    max-width: 65px;
+    // max-width: 65px;
     float: left;
 
     @media screen and (max-width: $small-tablet) {
-      max-width: 50px;
+      // max-width: 50px;
     }
   }
 
